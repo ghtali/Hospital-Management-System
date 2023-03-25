@@ -39,24 +39,62 @@
 
 ```
 app/
+├── api/
+│   ├── __init__.py
+│   ├── appointments.py
+│   ├── doctors.py
+│   ├── lab_tests.py
+│   ├── patients.py
+│   └── prescriptions.py
 ├── db/
 │   ├── __init__.py
-│   └── repository.py
-├── models/
-│   ├── __init__.py
-│   ├── appointments.py
-│   ├── doctors.py
-│   ├── lab_tests.py
-│   ├── patients.py
-│   └── prescriptions.py
+│   ├── models.py
+│   ├── repositories/
+│   │   ├── __init__.py
+│   │   ├── appointments_repository.py
+│   │   ├── doctors_repository.py
+│   │   ├── lab_tests_repository.py
+│   │   ├── patients_repository.py
+│   │   └── prescriptions_repository.py
+│   ├── database.py
+│   └── interfaces/
+│       ├── __init__.py
+│       ├── appointment_repository_interface.py
+│       ├── doctor_repository_interface.py
+│       ├── lab_test_repository_interface.py
+│       ├── patient_repository_interface.py
+│       └── prescription_repository_interface.py
 ├── services/
 │   ├── __init__.py
+│   ├── appointments_service.py
+│   ├── doctors_service.py
+│   ├── lab_tests_service.py
+│   ├── patients_service.py
+│   └── prescriptions_service.py
+├── models/
+│   ├── __init__.py
+│   ├── base.py
 │   ├── appointments.py
 │   ├── doctors.py
 │   ├── lab_tests.py
 │   ├── patients.py
 │   └── prescriptions.py
-└── main.py
+├── static/
+│   ├── script.js
+│   ├── style.css
+├── templates/
+│   ├── base.html
+│   ├── appointments.html
+│   ├── home.html
+│   ├── patients.html
+│   ├── lab_tests.html
+│   ├── login.html
+│   └── doctors.html
+├── utils/
+│   ├── __init__.py
+│   ├── auth.py
+│   └── validators.py
+└── app.py
 
 ```
 
