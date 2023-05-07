@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Hospital Management System{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+          <li><a href="{{ url_for('appointments') }}">Appointments</a></li>
+          <li><a href="{{ url_for('patients') }}">Patients</a></li>
+          <li><a href="{{ url_for('lab_tests') }}">Lab Tests</a></li>
+          <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+          <li><a href="{{ url_for('prescriptions') }}">Prescriptions</a></li>
+          {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+          {% else %}
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

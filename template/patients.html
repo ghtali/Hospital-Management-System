@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block content %}
+<h1>Patients</h1>
+<a href="{{ url_for('patients.add_patient') }}">Add Patient</a>
+
+{% if patients %}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>Phone</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for patient in patients %}
+    <tr>
+      <td>{{ patient.id }}</td>
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.gender }}</td>
+      <td>{{ patient.age }}</td>
+      <td>{{ patient.phone }}</td>
+      <td>
+        <a href="{{ url_for('patients.view_patient', patient_id=patient.id) }}"
+          >View</a
+        >
+        <a href="{{ url_for('patients.edit_patient', patient_id=patient.id) }}"
+          >Edit</a
+        >
+        <a
+          href="{{ url_for('patients.delete_patient', patient_id=patient.id) }}"
+          >Delete</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No patients found.</p>
+{% endif %} {% endblock %}
