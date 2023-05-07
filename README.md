@@ -25,6 +25,8 @@
 
 ![Database Schema](https://raw.githubusercontent.com/ghtali/hospital-management-system/master/docs/images/db-schema.jpg)
 
+[Link to the Database Schema on DrawSQL](https://drawsql.app/teams/team-a-27/diagrams/hospital/embed)
+
 - The Patients table has a one-to-many relationship with the Appointments table. This means that one patient can have multiple appointments, but each appointment is associated with only one patient. The relationship is established by the PatientID column in the Appointments table, which serves as a foreign key that references the PatientID column in the Patients table.
 
 - The Doctors table also has a one-to-many relationship with the Appointments table. This means that one doctor can have multiple appointments, but each appointment is associated with only one doctor. The relationship is established by the DoctorID column in the Appointments table, which serves as a foreign key that references the DoctorID column in the Doctors table.
