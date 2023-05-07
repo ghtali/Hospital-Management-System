@@ -1,48 +1,29 @@
-from flask import Flask, jsonify, request
-from typing import List
+from typing import List, Dict
+
+from db.interfaces.lab_test_repository_interface import LabTestRepositoryInterface
 from models.lab_tests import LabTest
-from services.lab_tests_service import LabTestsService
-
-app = Flask(__name__)
-
-lab_tests_service = LabTestsService()
 
 
-@app.route('/lab_tests', methods=['POST'])
-def add_lab_test():
-    lab_test = LabTest(**request.json)
-    added_lab_test = lab_tests_service.add_lab_test(lab_test)
-    return jsonify(added_lab_test.to_dict())
+class LabTestService:
+    def __init__(self, lab_test_repo: LabTestRepositoryInterface):
+        self.lab_test_repo = lab_test_repo
 
+    def add_lab_test(self, lab_test_data: Dict) -> LabTest:
+        lab_test = LabTest(**lab_test_data)
+        return self.lab_test_repo.add_lab_test(lab_test)
 
-@app.route('/lab_tests/<int:lab_test_id>', methods=['GET'])
-def get_lab_test(lab_test_id: int):
-    lab_test = lab_tests_service.get_lab_test(lab_test_id)
-    if lab_test:
-        return jsonify(lab_test.to_dict())
-    else:
-        return jsonify({'error': 'Lab test not found'}), 404
+    def get_all_lab_tests(self) -> List[LabTest]:
+        return self.lab_test_repo.get_all_lab_tests()
 
+    def get_lab_test_by_id(self, lab_test_id: int) -> LabTest:
+        return self.lab_test_repo.get_lab_test_by_id(lab_test_id)
 
-@app.route('/lab_tests/<int:lab_test_id>', methods=['PUT'])
-def update_lab_test(lab_test_id: int):
-    lab_test = LabTest(**request.json)
-    updated_lab_test = lab_tests_service.update_lab_test(lab_test_id, lab_test)
-    return jsonify(updated_lab_test.to_dict())
+    def update_lab_test(self, lab_test_id: int, lab_test_data: Dict) -> LabTest:
+        lab_test = self.lab_test_repo.get_lab_test_by_id(lab_test_id)
+        for key, value in lab_test_data.items():
+            setattr(lab_test, key, value)
+        return self.lab_test_repo.update_lab_test(lab_test)
 
-
-@app.route('/lab_tests/<int:lab_test_id>', methods=['DELETE'])
-def delete_lab_test(lab_test_id: int):
-    lab_tests_service.delete_lab_test(lab_test_id)
-    return '', 204
-
-
-@app.route('/lab_tests', methods=['GET'])
-def get_all_lab_tests():
-    lab_tests = lab_tests_service.get_all_lab_tests()
-    lab_tests_dict = [lab_test.to_dict() for lab_test in lab_tests]
-    return jsonify(lab_tests_dict)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    def delete_lab_test(self, lab_test_id: int) -> bool:
+        lab_test = self.lab_test_repo.get_lab_test_by_id(lab_test_id)
+        return self.lab_test_repo.delete_lab_test(lab_test)

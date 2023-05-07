@@ -1,48 +1,30 @@
-from flask import Flask, jsonify, request
 from typing import List
+
+from db.interfaces import PatientRepositoryInterface
 from models.patients import Patient
-from services.patients_service import PatientsService
-
-app = Flask(__name__)
-
-patients_service = PatientsService()
 
 
-@app.route('/patients', methods=['POST'])
-def add_patient():
-    patient = Patient(**request.json)
-    added_patient = patients_service.add_patient(patient)
-    return jsonify(added_patient.to_dict())
+class PatientsService:
+    def __init__(self, repo: PatientRepositoryInterface):
+        self.repo = repo
 
+    def get_all_patients(self) -> List[Patient]:
+        return self.repo.get_all()
 
-@app.route('/patients/<int:patient_id>', methods=['GET'])
-def get_patient(patient_id: int):
-    patient = patients_service.get_patient(patient_id)
-    if patient:
-        return jsonify(patient.to_dict())
-    else:
-        return jsonify({'error': 'Patient not found'}), 404
+    def get_patient_by_id(self, patient_id: int) -> Patient:
+        return self.repo.get_by_id(patient_id)
 
+    def add_patient(self, patient: Patient) -> Patient:
+        return self.repo.add(patient)
 
-@app.route('/patients/<int:patient_id>', methods=['PUT'])
-def update_patient(patient_id: int):
-    patient = Patient(**request.json)
-    updated_patient = patients_service.update_patient(patient_id, patient)
-    return jsonify(updated_patient.to_dict())
+    def update_patient(self, patient_id: int, new_patient_data: Patient) -> Patient:
+        patient = self.repo.get_by_id(patient_id)
+        patient.name = new_patient_data.name
+        patient.age = new_patient_data.age
+        patient.gender = new_patient_data.gender
+        patient.phone_number = new_patient_data.phone_number
+        patient.address = new_patient_data.address
+        return self.repo.update(patient_id, patient)
 
-
-@app.route('/patients/<int:patient_id>', methods=['DELETE'])
-def delete_patient(patient_id: int):
-    patients_service.delete_patient(patient_id)
-    return '', 204
-
-
-@app.route('/patients', methods=['GET'])
-def get_all_patients():
-    patients = patients_service.get_all_patients()
-    patients_dict = [patient.to_dict() for patient in patients]
-    return jsonify(patients_dict)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    def delete_patient(self, patient_id: int):
+        return self.repo.delete(patient_id)
