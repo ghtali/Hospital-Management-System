@@ -1,50 +1,46 @@
-from flask import Flask, jsonify, request
 from typing import List
-from models.appointments import Appointment
-from services.appointments_service import AppointmentsService
+from datetime import datetime
+from ..db.interfaces.appointment_repository_interface import AppointmentRepositoryInterface
+from models.appointments import Appointment, AppointmentCreate, AppointmentUpdate
 
 
-app = Flask(__name__)
+class AppointmentsService:
+    def __init__(self, appointment_repository: AppointmentRepositoryInterface):
+        self.appointment_repository = appointment_repository
 
-appointments_service = AppointmentsService()
+    def create_appointment(self, appointment_create: AppointmentCreate) -> Appointment:
+        appointment = self.appointment_repository.create_appointment(
+            appointment_create)
+        return appointment
 
+    def get_appointment_by_id(self, appointment_id: int) -> Appointment:
+        appointment = self.appointment_repository.get_appointment_by_id(
+            appointment_id)
+        return appointment
 
-@app.route('/appointments', methods=['POST'])
-def add_appointment():
-    appointment = Appointment(**request.json)
-    added_appointment = appointments_service.add_appointment(appointment)
-    return jsonify(added_appointment.to_dict())
+    def get_all_appointments(self) -> List[Appointment]:
+        appointments = self.appointment_repository.get_all_appointments()
+        return appointments
 
+    def update_appointment(self, appointment_id: int, appointment_update: AppointmentUpdate) -> Appointment:
+        appointment = self.appointment_repository.update_appointment(
+            appointment_id, appointment_update)
+        return appointment
 
-@app.route('/appointments/<int:appointment_id>', methods=['GET'])
-def get_appointment(appointment_id: int):
-    appointment = appointments_service.get_appointment(appointment_id)
-    if appointment:
-        return jsonify(appointment.to_dict())
-    else:
-        return jsonify({'error': 'Appointment not found'}), 404
+    def delete_appointment(self, appointment_id: int) -> None:
+        self.appointment_repository.delete_appointment(appointment_id)
 
+    def get_appointments_for_doctor(self, doctor_id: int) -> List[Appointment]:
+        appointments = self.appointment_repository.get_appointments_for_doctor(
+            doctor_id)
+        return appointments
 
-@app.route('/appointments/<int:appointment_id>', methods=['PUT'])
-def update_appointment(appointment_id: int):
-    appointment = Appointment(**request.json)
-    updated_appointment = appointments_service.update_appointment(
-        appointment_id, appointment)
-    return jsonify(updated_appointment.to_dict())
+    def get_appointments_for_patient(self, patient_id: int) -> List[Appointment]:
+        appointments = self.appointment_repository.get_appointments_for_patient(
+            patient_id)
+        return appointments
 
-
-@app.route('/appointments/<int:appointment_id>', methods=['DELETE'])
-def delete_appointment(appointment_id: int):
-    appointments_service.delete_appointment(appointment_id)
-    return '', 204
-
-
-@app.route('/appointments', methods=['GET'])
-def get_all_appointments():
-    appointments = appointments_service.get_all_appointments()
-    appointments_dict = [appointment.to_dict() for appointment in appointments]
-    return jsonify(appointments_dict)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    def get_appointments_between_dates(self, start_date: datetime, end_date: datetime) -> List[Appointment]:
+        appointments = self.appointment_repository.get_appointments_between_dates(
+            start_date, end_date)
+        return appointments

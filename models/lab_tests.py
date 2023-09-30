@@ -1,10 +1,23 @@
+"""
+This file contains the LabTest model class.
+"""
 
-class LabTest:
-    def __init__(self, test_id, appointment_id, test_name, date_created,
-                 date_completed, result):
-        self.test_id = test_id,
-        self.appointment_id = appointment_id,
-        self.test_name = test_name,
-        self.date_created = date_created,
-        self.date_completed = date_completed,
-        self.result = result
+from .base import Base, db
+
+
+class LabTest(Base):
+    """
+    The LabTest model class.
+    """
+    __tablename__ = 'lab_tests'
+
+    # Fields
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        """
+        Returns a string representation of the lab test object.
+        """
+        return f"<LabTest {self.id}>"

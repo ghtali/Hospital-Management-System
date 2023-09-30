@@ -1,115 +1,94 @@
-from flask import Flask, render_template, jsonify, request
+import os
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-from services import doctors_service, patients_service, appointments_service, lab_tests_service, prescriptions_service
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from werkzeug.security import check_password_hash
+from ..db.repositories import UserRepository
+from ..db.models import User
+
+from ..db import init_app, db
+
+from ..db.interfaces import PatientRepositoryInterface
+
 
 app = Flask(__name__)
+
 CORS(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    session = Session()
+    user_repo = UserRepository(session)
+    return user_repo.get_user_by_id(user_id)
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI', 'sqlite:///default.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+init_app(app)
+db.create_all()
 
 
-@app.route('/doctors')
-def get_doctors():
-    return jsonify(doctors_service.get_doctors())
-
-
-@app.route('/patients')
+@app.route('/patients', methods=['GET'])
 def get_patients():
-    return jsonify(patients_service.get_patients())
-
-
-@app.route('/appointments')
-def get_appointments():
-    return jsonify(appointments_service.get_appointments())
-
-
-@app.route('/lab_tests')
-def get_lab_tests():
-    return jsonify(lab_tests_service.get_lab_tests())
-
-
-@app.route('/prescriptions')
-def get_prescriptions():
-    return jsonify(prescriptions_service.get_prescriptions())
-
-
-@app.route('/doctors', methods=['POST'])
-def add_doctor():
-    return jsonify(doctors_service.add_doctor(request.json))
+    return jsonify(PatientRepositoryInterface.get_patients())
 
 
 @app.route('/patients', methods=['POST'])
 def add_patient():
-    return jsonify(patients_service.add_patient(request.json))
+    return jsonify(PatientRepositoryInterface.add_patient(request.get_json()))
 
 
-@app.route('/appointments', methods=['POST'])
-def add_appointment():
-    return jsonify(appointments_service.add_appointment(request.json))
-
-
-@app.route('/lab_tests', methods=['POST'])
-def add_lab_test():
-    return jsonify(lab_tests_service.add_lab_test(request.json))
-
-
-@app.route('/prescriptions', methods=['POST'])
-def add_prescription():
-    return jsonify(prescriptions_service.add_prescription(request.json))
-
-
-@app.route('/doctors/<int:doctor_id>', methods=['PUT'])
-def update_doctor(doctor_id):
-    return jsonify(doctors_service.update_doctor(doctor_id, request.json))
+@app.route('/patients/<int:patient_id>', methods=['GET'])
+def get_patient(patient_id):
+    return jsonify(PatientRepositoryInterface.get_patient(patient_id))
 
 
 @app.route('/patients/<int:patient_id>', methods=['PUT'])
 def update_patient(patient_id):
-    return jsonify(patients_service.update_patient(patient_id, request.json))
-
-
-@app.route('/appointments/<int:appointment_id>', methods=['PUT'])
-def update_appointment(appointment_id):
-    return jsonify(appointments_service.update_appointment(appointment_id, request.json))
-
-
-@app.route('/lab_tests/<int:lab_test_id>', methods=['PUT'])
-def update_lab_test(lab_test_id):
-    return jsonify(lab_tests_service.update_lab_test(lab_test_id, request.json))
-
-
-@app.route('/prescriptions/<int:prescription_id>', methods=['PUT'])
-def update_prescription(prescription_id):
-    return jsonify(prescriptions_service.update_prescription(prescription_id, request.json))
-
-
-@app.route('/doctors/<int:doctor_id>', methods=['DELETE'])
-def delete_doctor(doctor_id):
-    return jsonify(doctors_service.delete_doctor(doctor_id))
+    return jsonify(PatientRepositoryInterface.update_patient(patient_id, request.get_json()))
 
 
 @app.route('/patients/<int:patient_id>', methods=['DELETE'])
 def delete_patient(patient_id):
-    return jsonify(patients_service.delete_patient(patient_id))
-
-
-@app.route('/appointments/<int:appointment_id>', methods=['DELETE'])
-def delete_appointment(appointment_id):
-    return jsonify(appointments_service.delete_appointment(appointment_id))
-
-
-@app.route('/lab_tests/<int:lab_test_id>', methods=['DELETE'])
-def delete_lab_test(lab_test_id):
-    return jsonify(lab_tests_service.delete_lab_test(lab_test_id))
-
-
-@app.route('/prescriptions/<int:prescription_id>', methods=['DELETE'])
-def delete_prescription(prescription_id):
-    return jsonify(prescriptions_service.delete_prescription(prescription_id))
+    return jsonify(PatientRepositoryInterface.delete_patient(patient_id))
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not Found", "message": str(error)}), 404
+
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({"error": "Bad Request", "message": str(error)}), 400
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal Server Error", "message": str(error)}), 500
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        session = Session()
+        user_repo = UserRepository(session)
+        user = user_repo.get_user_by_username(username)
+        if user and check_password_hash(user.hashed_password, password):
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            flash('Invalid username or password', 'error')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))

@@ -1,0 +1,5 @@
+from .appointment_repository_interface import AppointmentRepositoryInterface
+from .doctor_repository_interface import DoctorRepositoryInterface
+from .lab_test_repository_interface import LabTestRepositoryInterface
+from .patient_repository_interface import PatientRepositoryInterface
+from .prescription_repository_interface import PrescriptionRepositoryInterface

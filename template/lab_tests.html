@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Lab Tests</h1>
+
+{% if lab_tests %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Patient ID</th>
+      <th scope="col">Lab Test Type</th>
+      <th scope="col">Result</th>
+      <th scope="col">Prescription ID</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for lab_test in lab_tests %}
+    <tr>
+      <th scope="row">{{ lab_test.id }}</th>
+      <td>{{ lab_test.patient_id }}</td>
+      <td>{{ lab_test.type }}</td>
+      <td>{{ lab_test.result }}</td>
+      <td>{{ lab_test.prescription_id }}</td>
+      <td>
+        <a
+          href="{{ url_for('update_lab_test', id=lab_test.id) }}"
+          class="btn btn-sm btn-outline-secondary"
+          >Edit</a
+        >
+        <a
+          href="{{ url_for('delete_lab_test', id=lab_test.id) }}"
+          class="btn btn-sm btn-outline-danger"
+          >Delete</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No lab tests found.</p>
+{% endif %}
+
+<hr />
+
+<a href="{{ url_for('add_lab_test') }}" class="btn btn-primary"
+  >Add New Lab Test</a
+>
+{% endblock %}
