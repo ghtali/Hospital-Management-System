@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from db.models import LabTest
+from ..db.models import LabTest
 
 
 class ILabTestRepository(ABC):

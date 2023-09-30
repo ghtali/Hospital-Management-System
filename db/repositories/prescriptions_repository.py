@@ -2,9 +2,9 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from db.interfaces.prescription_repository_interface import PrescriptionRepositoryInterface
-from db.models import Prescription
-from db.models import Patient, Doctor
+from ..db.interfaces.prescription_repository_interface import PrescriptionRepositoryInterface
+from ..db.models import Prescription
+from ..db.models import Patient, Doctor
 
 
 class PrescriptionsRepository(PrescriptionRepositoryInterface):

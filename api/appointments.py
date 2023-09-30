@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
-from db.database import SessionLocal
-from db.models import Appointment
-from db.repositories.appointments_repository import AppointmentsRepository
-from services.appointments_service import AppointmentsService
+from ..db.database import SessionLocal
+from ..db.models import Appointment
+from ..db.repositories.appointments_repository import AppointmentsRepository
+from ..services.appointments_service import AppointmentsService
 
 router = APIRouter(prefix="/appointments", tags=["appointments"])
 

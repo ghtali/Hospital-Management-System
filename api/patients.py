@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
-from services.patients_service import PatientsService
+from ..services.patients_service import PatientsService
 
 
 patients_api_bp = Blueprint('patients_api_bp', __name__)
@@ -37,3 +37,11 @@ def update_patient(patient_id):
 def delete_patient(patient_id):
     patients_service.delete_patient(patient_id)
     return '', 204
+
+@patients_api_bp.errorhandler(404)
+def not_found(e):
+    return jsonify(error=str(e)), 404
+
+@patients_api_bp.errorhandler(400)
+def bad_request(e):
+    return jsonify(error=str(e)), 400

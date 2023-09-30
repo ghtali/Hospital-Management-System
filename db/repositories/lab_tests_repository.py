@@ -1,7 +1,7 @@
 from typing import List
-from db.interfaces.lab_test_repository_interface import LabTestRepositoryInterface
-from db.models import LabTest
-from db.database import db_session
+from ..db.interfaces.lab_test_repository_interface import LabTestRepositoryInterface
+from ..db.models import LabTest
+from ..db.database import db_session
 
 
 class LabTestsRepository(LabTestRepositoryInterface):

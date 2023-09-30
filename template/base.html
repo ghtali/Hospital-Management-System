@@ -17,7 +17,7 @@
           <li><a href="{{ url_for('patients') }}">Patients</a></li>
           <li><a href="{{ url_for('lab_tests') }}">Lab Tests</a></li>
           <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
-          <li><a href="{{ url_for('prescriptions') }}">Prescriptions</a></li>
+          
           {% if current_user.is_authenticated %}
           <li><a href="{{ url_for('logout') }}">Logout</a></li>
           {% else %}

@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from services.lab_tests_service import LabTestsService
+from ..services.lab_tests_service import LabTestsService
 
 
 lab_tests_api_bp = Blueprint('lab_tests_api', __name__)

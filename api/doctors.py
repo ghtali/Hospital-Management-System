@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from services import doctors_service
+from ..services import doctors_service
 
 doctors_api_bp = Blueprint('doctors_api', __name__, url_prefix='/api/doctors')
 

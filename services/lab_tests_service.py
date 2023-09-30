@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from db.interfaces.lab_test_repository_interface import LabTestRepositoryInterface
+from ..db.interfaces.lab_test_repository_interface import LabTestRepositoryInterface
 from models.lab_tests import LabTest
 
 

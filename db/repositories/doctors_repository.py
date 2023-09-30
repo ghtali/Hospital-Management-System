@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from db.models import Doctor
-from db.interfaces.doctor_repository_interface import DoctorRepositoryInterface
+from ..db.models import Doctor
+from ..db.interfaces.doctor_repository_interface import DoctorRepositoryInterface
 
 
 class DoctorRepository(DoctorRepositoryInterface):

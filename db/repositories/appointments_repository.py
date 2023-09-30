@@ -1,7 +1,7 @@
 from typing import List
-from db.interfaces.appointment_repository_interface import AppointmentRepositoryInterface
-from db.models import Appointment
-from db.database import db_session
+from ..db.interfaces.appointment_repository_interface import AppointmentRepositoryInterface
+from ..db.models import Appointment
+from ..db.database import db_session
 
 
 class AppointmentsRepository(AppointmentRepositoryInterface):

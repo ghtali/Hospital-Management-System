@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime
-from db.interfaces.appointment_repository_interface import AppointmentRepositoryInterface
+from ..db.interfaces.appointment_repository_interface import AppointmentRepositoryInterface
 from models.appointments import Appointment, AppointmentCreate, AppointmentUpdate
 
 

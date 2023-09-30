@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from db.models import Patient
+from ..db.models import Patient
 
 
 class IPatientRepository(ABC):

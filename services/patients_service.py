@@ -1,6 +1,6 @@
 from typing import List
 
-from db.interfaces import PatientRepositoryInterface
+from ..db.interfaces import PatientRepositoryInterface
 from models.patients import Patient
 
 
@@ -17,7 +17,7 @@ class PatientsService:
     def add_patient(self, patient: Patient) -> Patient:
         return self.repo.add(patient)
 
-    def update_patient(self, patient_id: int, new_patient_data: Patient) -> Patient:
+    def update_patient_by_id(self, patient_id: int, new_patient_data: Patient) -> Patient:
         patient = self.repo.get_by_id(patient_id)
         patient.name = new_patient_data.name
         patient.age = new_patient_data.age

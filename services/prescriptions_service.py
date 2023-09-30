@@ -1,6 +1,6 @@
 from typing import List
 
-from db.interfaces.prescription_repository_interface import PrescriptionRepositoryInterface
+from ..db.interfaces.prescription_repository_interface import PrescriptionRepositoryInterface
 from models.prescriptions import Prescription
 
 
