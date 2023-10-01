@@ -60,7 +60,7 @@ Once the app is running, access it in your web browser at `http://localhost:5000
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit pull requests or raise issues.
+Contributions are welcome! Please feel free to submit pull requests or raise issues. (just pull request to the 'develop') branch is allowed!
 
 ## License
 
