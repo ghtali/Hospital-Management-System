@@ -1,23 +1,38 @@
-"""
-This file contains the LabTest model class.
-"""
+from flask import Blueprint, jsonify, request
 
-from .base import Base, db
+from ..services.lab_tests_service import LabTestsService
 
 
-class LabTest(Base):
-    """
-    The LabTest model class.
-    """
-    __tablename__ = 'lab_tests'
+lab_tests_api_bp = Blueprint('lab_tests_api', __name__)
+lab_tests_service = LabTestsService()
 
-    # Fields
-    name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    price = db.Column(db.Float, nullable=False)
 
-    def __repr__(self):
-        """
-        Returns a string representation of the lab test object.
-        """
-        return f"<LabTest {self.id}>"
+@lab_tests_api_bp.route('/lab_tests', methods=['POST'])
+def create_lab_test():
+    data = request.json
+    lab_test = lab_tests_service.add_lab_test(data)
+    return jsonify(lab_test), 201
+
+
+@lab_tests_api_bp.route('/lab_tests', methods=['GET'])
+def get_all_lab_tests():
+    lab_tests = lab_tests_service.get_all_lab_tests()
+    return jsonify(lab_tests)
+
+
+@lab_tests_api_bp.route('/lab_tests/<int:lab_test_id>', methods=['GET'])
+def get_lab_test(lab_test_id):
+    # TODO: Implement get_lab_test endpoint
+    pass
+
+
+@lab_tests_api_bp.route('/lab_tests/<int:lab_test_id>', methods=['PUT'])
+def update_lab_test(lab_test_id):
+    # TODO: Implement update_lab_test endpoint
+    pass
+
+
+@lab_tests_api_bp.route('/lab_tests/<int:lab_test_id>', methods=['DELETE'])
+def delete_lab_test(lab_test_id):
+    # TODO: Implement delete_lab_test endpoint
+    pass
