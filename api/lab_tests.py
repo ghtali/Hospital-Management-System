@@ -9,14 +9,15 @@ lab_tests_service = LabTestsService()
 
 @lab_tests_api_bp.route('/lab_tests', methods=['POST'])
 def create_lab_test():
-    # TODO: Implement create_lab_test endpoint
-    pass
+    data = request.json
+    lab_test = lab_tests_service.add_lab_test(data)
+    return jsonify(lab_test), 201
 
 
 @lab_tests_api_bp.route('/lab_tests', methods=['GET'])
 def get_all_lab_tests():
-    # TODO: Implement get_all_lab_tests endpoint
-    pass
+    lab_tests = lab_tests_service.get_all_lab_tests()
+    return jsonify(lab_tests)
 
 
 @lab_tests_api_bp.route('/lab_tests/<int:lab_test_id>', methods=['GET'])
